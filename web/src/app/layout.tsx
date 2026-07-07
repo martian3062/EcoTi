@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Link href="/footprint" className="rounded-full px-3 py-1.5 text-ink2 transition hover:bg-crimson/10 hover:text-crimson">OSINT Footprint</Link>
             <Link href="/tor" className="rounded-full px-3 py-1.5 text-ink2 transition hover:bg-crimson/10 hover:text-crimson">Tor Intel</Link>
             <Link href="/report" className="rounded-full px-3 py-1.5 text-ink2 transition hover:bg-crimson/10 hover:text-crimson">Report Fraud</Link>
-            <Link href="/copilot" className="rounded-full px-3 py-1.5 text-ink2 transition hover:bg-crimson/10 hover:text-crimson">Advisory Copilot</Link>
+            <Link href="/archive" className="rounded-full px-3 py-1.5 text-ink2 transition hover:bg-crimson/10 hover:text-crimson">Archive</Link>
           </nav>
         </header>
         <main className="mx-auto max-w-[1400px] p-6">{children}</main>

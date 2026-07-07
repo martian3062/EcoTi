@@ -3,11 +3,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { connectFeed } from "@/lib/ws";
 import { api } from "@/lib/api";
-import AgentRail from "./components/AgentRail";
-import EventFeed from "./components/EventFeed";
 import SelfHealToast, { Toast } from "./components/SelfHealToast";
 import CitizenShieldTool from "./components/CitizenShieldTool";
 import NumberCheckTool from "./components/NumberCheckTool";
+import AdvisoryCopilotTool from "./components/AdvisoryCopilotTool";
 
 // Leaflet touches `window` on import → load the map client-side only.
 const MapPanel = dynamic(() => import("./components/MapPanel"), {
@@ -15,23 +14,15 @@ const MapPanel = dynamic(() => import("./components/MapPanel"), {
   loading: () => <div className="glass-card h-[420px] p-4 text-sm text-ink3">loading map…</div>,
 });
 
-type FeedItem = { kind: string; data: Record<string, unknown>; at: number };
-
 export default function Dashboard() {
-  const [items, setItems] = useState<FeedItem[]>([]);
   const [toasts, setToasts] = useState<Toast[]>([]);
-  const [tick, setTick] = useState(0);
   const toastId = useRef(0);
 
   useEffect(() => {
     const off = connectFeed((m) => {
-      if (m.kind === "hello") return;
-      setItems((prev) => [{ kind: m.kind, data: m.data, at: Date.now() }, ...prev].slice(0, 60));
       if (m.kind === "toast") {
         setToasts((prev) => [...prev, { id: toastId.current++, message: String(m.data.message), level: String(m.data.level || "info") }]);
-        setTick((t) => t + 1);
       }
-      if (m.kind === "fused") setTick((t) => t + 1);
     });
     return off;
   }, []);
@@ -44,9 +35,7 @@ export default function Dashboard() {
   }, []);
 
   const runP1Core = useCallback(async () => {
-    const id = "+919812345678";
-    await api.p1Core({ identifier: id, lang: "hi" });
-    setTick((t) => t + 1);
+    await api.p1Core({ identifier: "+919812345678", lang: "hi" });
   }, []);
 
   return (
@@ -59,27 +48,21 @@ export default function Dashboard() {
           <p className="text-sm text-ink2">Self-healing multi-agent swarm · point-of-contact fraud defence</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <button onClick={runP1Core} className="btn-ghost">
-            Run P1 Shield demo
-          </button>
-          <button onClick={runDemo} className="btn-primary">
-            ▶ Run fusion demo
-          </button>
-        </div>
-      </div>
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div className="lg:col-span-1">
-          <MapPanel />
-        </div>
-        <div className="space-y-4">
-          <AgentRail tick={tick} />
-        </div>
-        <div className="lg:col-span-1">
-          <EventFeed items={items} />
+          <button onClick={runP1Core} className="btn-ghost">Run P1 Shield demo</button>
+          <button onClick={runDemo} className="btn-primary">▶ Run fusion demo</button>
         </div>
       </div>
 
-      {/* Citizen tools — Shield + Number Check as separate cards */}
+      {/* Map (column size) with Number Check to its right */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <MapPanel />
+        <div className="glass-card p-4">
+          <h3 className="mb-3 text-sm font-semibold text-ink">Number Check</h3>
+          <NumberCheckTool />
+        </div>
+      </div>
+
+      {/* Citizen tools — Shield · Advisory Copilot */}
       <h2 className="text-sm font-semibold text-ink2">Citizen tools</h2>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <div className="glass-card p-4">
@@ -87,8 +70,8 @@ export default function Dashboard() {
           <CitizenShieldTool />
         </div>
         <div className="glass-card p-4">
-          <h3 className="mb-3 text-sm font-semibold text-ink">Number Check</h3>
-          <NumberCheckTool />
+          <h3 className="mb-3 text-sm font-semibold text-ink">Advisory Copilot</h3>
+          <AdvisoryCopilotTool />
         </div>
       </div>
 

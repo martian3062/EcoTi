@@ -13,11 +13,19 @@ const KIND_STYLE: Record<string, string> = {
   hello: "border-l-ink3",
 };
 
-export default function EventFeed({ items }: { items: FeedItem[] }) {
+export default function EventFeed({
+  items,
+  title = "Live fused-event feed",
+  maxH = "max-h-[420px]",
+}: {
+  items: FeedItem[];
+  title?: string;
+  maxH?: string;
+}) {
   return (
     <div className="glass-card p-4">
-      <h2 className="mb-3 text-sm font-semibold text-ink2">Live fused-event feed</h2>
-      <div className="max-h-[420px] space-y-2 overflow-y-auto">
+      <h2 className="mb-3 text-sm font-semibold text-ink2">{title}</h2>
+      <div className={`${maxH} space-y-2 overflow-y-auto`}>
         {items.map((it, i) => (
           <div key={i} className={`border-l-2 ${KIND_STYLE[it.kind] ?? "border-l-ink3"} rounded-r bg-white/50 px-3 py-2 text-xs`}>
             <div className="mb-1 flex justify-between">
