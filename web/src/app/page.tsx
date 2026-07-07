@@ -21,7 +21,6 @@ export default function Dashboard() {
   const [items, setItems] = useState<FeedItem[]>([]);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [tick, setTick] = useState(0);
-  const [tool, setTool] = useState<"shield" | "number">("shield");
   const toastId = useRef(0);
 
   useEffect(() => {
@@ -80,24 +79,17 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Citizen tools — Shield + Number Check merged into the Command Centre */}
-      <div className="glass-card p-4">
-        <div className="mb-3 flex items-center gap-2">
-          <h2 className="mr-2 text-sm font-semibold text-ink2">Citizen tools</h2>
-          <button
-            onClick={() => setTool("shield")}
-            className={`rounded-full px-3 py-1 text-xs font-medium transition ${tool === "shield" ? "bg-crimson text-white" : "bg-white/60 text-ink2 hover:text-crimson"}`}
-          >
-            Citizen Shield
-          </button>
-          <button
-            onClick={() => setTool("number")}
-            className={`rounded-full px-3 py-1 text-xs font-medium transition ${tool === "number" ? "bg-crimson text-white" : "bg-white/60 text-ink2 hover:text-crimson"}`}
-          >
-            Number Check
-          </button>
+      {/* Citizen tools — Shield + Number Check as separate cards */}
+      <h2 className="text-sm font-semibold text-ink2">Citizen tools</h2>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <div className="glass-card p-4">
+          <h3 className="mb-3 text-sm font-semibold text-ink">Citizen Shield</h3>
+          <CitizenShieldTool />
         </div>
-        {tool === "shield" ? <CitizenShieldTool /> : <NumberCheckTool />}
+        <div className="glass-card p-4">
+          <h3 className="mb-3 text-sm font-semibold text-ink">Number Check</h3>
+          <NumberCheckTool />
+        </div>
       </div>
 
       <SelfHealToast toasts={toasts} />
