@@ -15,8 +15,9 @@ export default function NetworkPage() {
           Fraud <span className="text-gradient">Network Graph</span>
         </h1>
         <p className="text-sm text-ink2">
-          WebGL visualisation (Reagraph) of the mule-account cluster linked to a number/UPI, from the
-          self-healing fraud-graph agent. Node colour = risk; size = phone vs UPI node.
+          WebGL map of the mule-account cluster linked to a number/UPI, from the self-healing
+          fraud-graph agent. The central node is the queried number; surrounding accounts are
+          coloured by district and connected by fund-transfer edges.
         </p>
       </div>
       <div className="glass-card p-4">
