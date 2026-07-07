@@ -1,0 +1,42 @@
+# EcoTi — VM deployment (SQLite, single backend service).
+# Served under http://35.255.196.78/ecoti via nginx. Only web (8090) + api (8091)
+# are published to the host. SQLite lives on a named volume so data persists.
+name: ecoti
+
+services:
+  api:
+    build: ./api
+    env_file: .env
+    environment:
+      # No POSTGRES_HOST => Django uses SQLite at SQLITE_PATH.
+      SQLITE_PATH: /app/data/db.sqlite3
+      REDIS_URL: ""            # in-process InMemory channel layer (single daphne)
+      DJANGO_ALLOWED_HOSTS: "*"
+      NEO4J_ENABLED: "0"
+    volumes:
+      - ecoti_data:/app/data
+    ports: ["127.0.0.1:8091:8000"]
+    command: >
+      sh -c "python manage.py migrate --noinput &&
+             python manage.py seed_demo &&
+             python manage.py ingest_advisories &&
+             daphne -b 0.0.0.0 -p 8000 ecoti.asgi:application"
+    restart: unless-stopped
+
+  web:
+    build: ./web
+    environment:
+      NEXT_BASE_PATH: /ecoti
+      NEXT_PUBLIC_API_BASE: http://35.255.196.78/ecoti
+      NEXT_PUBLIC_WS_BASE: ws://35.255.196.78/ecoti
+      HOSTNAME: "0.0.0.0"
+      PORT: "3000"
+    ports: ["127.0.0.1:8090:3000"]
+    depends_on:
+      api: { condition: service_started }
+    command: >
+      sh -c "npm run build && npm run start -- -H 0.0.0.0"
+    restart: unless-stopped
+
+volumes:
+  ecoti_data:
