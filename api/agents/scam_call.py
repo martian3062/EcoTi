@@ -42,22 +42,18 @@ def _transcriber(state: dict) -> dict:
     edge = state.get("edge", False)
     transcript = state.get("transcript")
     asr_source = "provided" if transcript else "stub"
-    if not transcript and state.get("audio_url"):
-        path = _download_audio(state["audio_url"])
-        if path:
-            try:
-                transcript = llm.transcribe(path, force_edge=edge, language=state.get("language"))
-                asr_source = "asr"
-            finally:
-                try:
-                    os.remove(path)
-                except OSError:
-                    pass
+    audio_path = None
+    if state.get("audio_url"):
+        audio_path = _download_audio(state["audio_url"])  # kept for anti-spoof; cleaned in run()
+        if audio_path and not transcript:
+            transcript = llm.transcribe(audio_path, force_edge=edge, language=state.get("language"))
+            asr_source = "asr"
     if not transcript:
         transcript = llm.transcribe(state.get("audio_ref", ""), force_edge=edge)
     return {
         "transcript": transcript,
         "asr_source": asr_source,
+        "audio_path": audio_path,
         "edge_runtime": llm.runtime_info(force_edge=edge),
     }
 
@@ -73,7 +69,17 @@ def _script_matcher(state: dict) -> dict:
 
 
 def _voice_spoof(state: dict) -> dict:
-    # Deterministic stub: a flagged audio ref => synthetic voice.
+    # Real pretrained wav2vec2 deepfake detector (zero training) when a real
+    # audio file is present; otherwise deterministic stub for the demo refs.
+    if state.get("audio_path") and not state.get("edge"):
+        real = llm.classify_audio_spoof(state["audio_path"])
+        if real is not None:
+            return {
+                "voice_spoof_score": real["score"],
+                "synthetic_voice": real["synthetic"],
+                "voice_indicators": [f"wav2vec2:{real['label']}"],
+                "voice_model": real["model"],
+            }
     ref = state.get("audio_ref", "")
     synthetic = "scam" in ref or state.get("script_match_score", 0) >= 0.6
     indicators = []
@@ -120,6 +126,12 @@ swarm = BaseSwarm(
 
 def run(inputs: dict) -> dict:
     state = swarm.run(inputs)
+    # clean up any downloaded audio temp file
+    if state.get("audio_path"):
+        try:
+            os.remove(state["audio_path"])
+        except OSError:
+            pass
     state["event"] = A2AEvent(
         module=Module.SCAM_CALL.value,
         signal="scam_call_verdict",
@@ -132,6 +144,7 @@ def run(inputs: dict) -> dict:
             "matched_script": state.get("matched_script"),
             "synthetic_voice": state.get("synthetic_voice"),
             "voice_indicators": state.get("voice_indicators"),
+            "voice_model": state.get("voice_model"),
             "rationale": state.get("rationale"),
             "asr_source": state.get("asr_source"),
             "edge_runtime": state.get("edge_runtime"),

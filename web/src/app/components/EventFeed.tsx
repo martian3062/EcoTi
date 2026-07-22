@@ -27,7 +27,7 @@ export default function EventFeed({
       <h2 className="mb-3 text-sm font-semibold text-ink2">{title}</h2>
       <div className={`${maxH} space-y-2 overflow-y-auto`}>
         {items.map((it, i) => (
-          <div key={i} className={`border-l-2 ${KIND_STYLE[it.kind] ?? "border-l-ink3"} rounded-r bg-white/50 px-3 py-2 text-xs`}>
+          <div key={i} className={`border-l-2 ${KIND_STYLE[it.kind] ?? "border-l-ink3"} rounded-r bg-white/[0.06] px-3 py-2 text-xs`}>
             <div className="mb-1 flex justify-between">
               <span className="font-semibold uppercase tracking-wide text-ink2">{it.kind}</span>
               <span className="text-ink3">{new Date(it.at).toLocaleTimeString()}</span>

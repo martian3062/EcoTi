@@ -152,12 +152,22 @@ HF_EMBED_MODEL = os.getenv("HF_EMBED_MODEL", "sentence-transformers/paraphrase-m
 KIMI_API_KEY = os.getenv("KIMI_API_KEY", "")
 KIMI_BASE_URL = os.getenv("KIMI_BASE_URL", "https://api.moonshot.ai/v1")
 KIMI_MODEL = os.getenv("KIMI_MODEL", "kimi-k2-0711-preview")
+KIMI_VISION_MODEL = os.getenv("KIMI_VISION_MODEL", "moonshot-v1-8k-vision-preview")
 # Firecrawl — advisory RAG corpus ingestion
 FIRECRAWL_API_KEY = os.getenv("FIRECRAWL_API_KEY", "")
 # TinyFish — web-agent portal monitoring (roadmap)
 TINYFISH_API_KEY = os.getenv("TINYFISH_API_KEY", "")
 # IPQualityScore — real-time phone reputation / fraud score (optional, free tier)
 IPQS_API_KEY = os.getenv("IPQS_API_KEY", "")
+# Real-ML (zero-training) providers
+TABPFN_API_KEY = os.getenv("TABPFN_API_KEY", "")      # TabPFN hosted tabular classifier (fraud)
+HF_VOICE_MODEL = os.getenv("HF_VOICE_MODEL", "garystafford/wav2vec2-deepfake-voice-detector")
+VOICE_MODEL = os.getenv("VOICE_MODEL", "MelodyMachine/Deepfake-audio-detection-V2")  # local transformers
+HF_VLM_MODEL = os.getenv("HF_VLM_MODEL", "Qwen/Qwen2-VL-7B-Instruct")
+# OSINT enrichers
+HIBP_API_KEY = os.getenv("HIBP_API_KEY", "")          # Have I Been Pwned (paid key for account lookups)
+ABUSEIPDB_API_KEY = os.getenv("ABUSEIPDB_API_KEY", "")  # optional IP reputation
+OSINT_CACHE_TTL = int(os.getenv("OSINT_CACHE_TTL", "21600"))  # 6h
 
 NEO4J_ENABLED = os.getenv("NEO4J_ENABLED", "0") == "1"
 NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")

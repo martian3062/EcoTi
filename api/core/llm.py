@@ -200,6 +200,81 @@ def translate(text: str, target_lang: str, source_lang: str = "en-IN") -> str:
     return text
 
 
+# -------------------------------------------------------- text-to-speech (anchor)
+def tts(text: str, lang: str = "en", speaker: str = "anushka") -> str | None:
+    """Human-sounding TTS via Sarvam Bulbul (India-accented, multilingual).
+    Returns base64 WAV, or None if unavailable (frontend falls back to browser TTS)."""
+    if not settings.SARVAM_API_KEY or not text:
+        return None
+    try:
+        resp = requests.post(
+            f"{settings.SARVAM_BASE_URL}/text-to-speech",
+            headers={"api-subscription-key": settings.SARVAM_API_KEY},
+            json={
+                "inputs": [text[:480]],
+                "target_language_code": _sarvam_lang(lang),
+                "speaker": speaker,
+                "model": "bulbul:v2",
+                "speech_sample_rate": 22050,
+                "enable_preprocessing": True,
+            },
+            timeout=30,
+        )
+        resp.raise_for_status()
+        audios = resp.json().get("audios", [])
+        return audios[0] if audios else None
+    except Exception as exc:  # pragma: no cover
+        logger.warning("Sarvam TTS failed: %s", exc)
+        return None
+
+
+# ------------------------------------------------------- audio anti-spoof (voice)
+def classify_audio_spoof(path: str) -> dict | None:
+    """Real AI-voice / deepfake detection via a locally-imported pretrained
+    wav2vec2 model (zero training). Returns {synthetic, score, label} or None."""
+    from . import voice_spoof
+
+    return voice_spoof.classify(path)
+
+
+# ------------------------------------------------------------ counterfeit VLM
+def vision_note_check(image_bytes: bytes, denomination: str = "500") -> dict | None:
+    """Zero-shot counterfeit note check via the Kimi (Moonshot) vision model.
+    Returns {raw, model} or None when unavailable."""
+    if not settings.KIMI_API_KEY or not image_bytes:
+        return None
+    import base64
+
+    b64 = base64.b64encode(image_bytes).decode()
+    prompt = (
+        f"You are a currency authentication expert. Examine this Indian Rs.{denomination} banknote. "
+        "Check security features: watermark, security thread, microprint, intaglio print, serial-number "
+        "font. Respond ONLY as JSON: {\"verdict\":\"genuine|counterfeit|uncertain\", "
+        "\"rationale\":\"...\", \"failing_features\":[...]}."
+    )
+    model = getattr(settings, "KIMI_VISION_MODEL", "moonshot-v1-8k-vision-preview")
+    try:
+        resp = requests.post(
+            f"{settings.KIMI_BASE_URL}/chat/completions",
+            headers={"Authorization": f"Bearer {settings.KIMI_API_KEY}"},
+            json={
+                "model": model,
+                "messages": [{"role": "user", "content": [
+                    {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{b64}"}},
+                    {"type": "text", "text": prompt},
+                ]}],
+                "max_tokens": 400,
+            },
+            timeout=60,
+        )
+        resp.raise_for_status()
+        content = resp.json()["choices"][0]["message"]["content"]
+        return {"raw": content, "model": model}
+    except Exception as exc:  # pragma: no cover
+        logger.warning("Kimi VLM note check failed: %s", exc)
+        return None
+
+
 def _sarvam_lang(code: str) -> str:
     """Map short lang codes to Sarvam BCP-47 codes."""
     return {

@@ -100,7 +100,7 @@ export default function ReportPage() {
             <div className="mb-2 text-xs font-semibold text-ink3">Recent reports</div>
             <ul className="max-h-52 space-y-1 overflow-y-auto text-xs text-ink2">
               {recent.recent.map((r, i) => (
-                <li key={i} className="border-b border-black/5 py-1">
+                <li key={i} className="border-b border-white/10 py-1">
                   <span className="font-mono text-ink">{r.number}</span>
                   <span className="ml-1 rounded bg-crimson/10 px-1.5 text-crimson">{r.category}</span>
                   {r.amount_lost && <span className="ml-1 text-ink3">₹{r.amount_lost}</span>}

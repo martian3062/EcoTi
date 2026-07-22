@@ -22,20 +22,20 @@ const STYLE: Record<string, string> = {
 
 export default function VerdictCard({ result }: { result: ShieldResult }) {
   return (
-    <div className={`glass-card border-2 p-5 ${STYLE[result.verdict] ?? "border-black/10"}`}>
+    <div className={`glass-card border-2 p-5 ${STYLE[result.verdict] ?? "border-white/10"}`}>
       <div className="flex items-center justify-between gap-3">
         <span className="text-2xl font-extrabold uppercase tracking-tight">{result.verdict}</span>
-        <span className="badge shrink-0 bg-white/70 text-ink2">
+        <span className="badge shrink-0 bg-white/10 text-ink2">
           {result.route === "fallback" ? "edge fallback" : "on-device"} · {result.lang}
         </span>
       </div>
       <p className="mt-3 text-base text-ink">{result.advisory}</p>
       <div className="mt-3 grid gap-2 text-xs text-ink2 sm:grid-cols-2">
-        <div className="rounded-lg bg-white/60 p-2.5">
+        <div className="rounded-lg bg-white/10 p-2.5">
           <div className="text-ink3">Matched pattern</div>
           <div>{result.matched_script?.label || "No high-risk script"}</div>
         </div>
-        <div className="rounded-lg bg-white/60 p-2.5">
+        <div className="rounded-lg bg-white/10 p-2.5">
           <div className="text-ink3">Runtime</div>
           <div>
             {result.edge_runtime?.provider || "stub"} /{" "}
@@ -44,7 +44,7 @@ export default function VerdictCard({ result }: { result: ShieldResult }) {
         </div>
       </div>
       {result.report_draft && (
-        <div className="mt-4 rounded-xl bg-white/60 p-3 text-sm text-ink">
+        <div className="mt-4 rounded-xl bg-white/10 p-3 text-sm text-ink">
           <div className="mb-1 font-semibold">One-tap report · {result.report_draft.portal}</div>
           <div className="mb-2 text-xs text-ink3">{result.report_draft.category}</div>
           <ol className="list-decimal space-y-1 pl-5 text-xs text-ink2">

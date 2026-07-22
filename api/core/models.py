@@ -67,6 +67,22 @@ class EvidencePacket(models.Model):
         return f"EvidencePacket {self.identifier} [{self.status}]"
 
 
+class OsintCache(models.Model):
+    """TTL cache for OSINT footprint lookups (rate-limit friendly)."""
+
+    kind = models.CharField(max_length=24, db_index=True)
+    identifier = models.CharField(max_length=256, db_index=True)
+    payload = models.JSONField(default=dict)
+    created_at = models.DateTimeField()
+
+    class Meta:
+        unique_together = ("kind", "identifier")
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"OsintCache {self.kind}:{self.identifier}"
+
+
 class FraudReport(models.Model):
     """A citizen-submitted fraud report. Reported numbers become a community
     watchlist signal that raises the risk of future number checks."""

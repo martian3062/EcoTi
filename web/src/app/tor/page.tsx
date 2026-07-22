@@ -73,7 +73,7 @@ export default function TorPage() {
           <button onClick={checkIp} disabled={ipLoading} className="btn-primary">{ipLoading ? "Checking…" : "Check IP"}</button>
         </div>
         {ipRes && (
-          <div className="mt-3 rounded-xl bg-white/60 p-3 text-sm">
+          <div className="mt-3 rounded-xl bg-white/10 p-3 text-sm">
             {ipRes.is_tor ? (
               <div className={ipRes.bad_exit ? "text-danger" : "text-warn"}>
                 ⚠ <b>Tor {ipRes.is_exit ? "EXIT" : "relay"} node</b>
@@ -97,7 +97,7 @@ export default function TorPage() {
         {loading && <div className="text-xs text-ink3">loading live Tor data…</div>}
         <div className="max-h-[460px] space-y-2 overflow-y-auto">
           {anom?.anomalies.map((a, i) => (
-            <div key={i} className="rounded-lg bg-white/50 p-3 text-xs">
+            <div key={i} className="rounded-lg bg-white/[0.06] p-3 text-xs">
               <div className="flex items-center justify-between">
                 <span className="font-mono font-semibold text-ink">
                   {a.nickname} <span className="text-ink3">· {a.country} · {a.as_name}</span>

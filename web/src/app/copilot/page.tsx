@@ -48,7 +48,7 @@ export default function CopilotPage() {
           <button
             key={s}
             onClick={() => setQ(s)}
-            className="rounded-full border border-black/10 bg-white/60 px-3 py-1 text-xs text-ink2 transition hover:border-crimson hover:text-crimson"
+            className="rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs text-ink2 transition hover:border-crimson hover:text-crimson"
           >
             {s.length > 42 ? s.slice(0, 42) + "…" : s}
           </button>
@@ -71,7 +71,7 @@ export default function CopilotPage() {
         <div className="glass-card border-2 border-crimson/30 p-5">
           <p className="whitespace-pre-line text-[15px] leading-relaxed text-ink">{ans.answer}</p>
           {ans.sources.length > 0 && (
-            <div className="mt-3 border-t border-black/10 pt-3">
+            <div className="mt-3 border-t border-white/10 pt-3">
               <div className="mb-2 text-xs font-semibold text-ink3">Sources</div>
               <ul className="space-y-1 text-xs">
                 {ans.sources.map((s) => (

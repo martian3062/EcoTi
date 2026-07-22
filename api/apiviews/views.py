@@ -66,6 +66,38 @@ def tor_check_ip(request):
     return Response(tor_intel.check_ip(ip))
 
 
+@extend_schema(tags=["system"])
+@api_view(["GET"])
+def news_feed(request):
+    """Live fraud/cyber news headlines (Google News RSS) for the ticker."""
+    from core.news import headlines
+
+    return Response({"items": headlines(int(request.query_params.get("limit", 24)))})
+
+
+@extend_schema(tags=["system"])
+@api_view(["GET"])
+def news_anchor(request):
+    """AI news-anchor bulletin (LLM summary of the top fraud headlines)."""
+    from core.news import anchor_bulletin
+
+    return Response(anchor_bulletin())
+
+
+@extend_schema(tags=["system"])
+@api_view(["POST"])
+def tts_speak(request):
+    """Human TTS (Sarvam Bulbul) → base64 WAV for the AI anchor."""
+    from core import llm
+
+    data = request.data or {}
+    text = (data.get("text") or "").strip()
+    if not text:
+        return Response({"error": "text required"}, status=400)
+    audio = llm.tts(text, lang=data.get("lang", "en"), speaker=data.get("speaker", "anushka"))
+    return Response({"audio_b64": audio, "format": "wav"})
+
+
 @extend_schema(tags=["citizen"])
 @api_view(["POST"])
 def footprint(request):

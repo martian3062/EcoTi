@@ -9,12 +9,20 @@ celery==5.4.0
 redis==5.2.1
 psycopg[binary]==3.2.3
 pgvector==0.3.6
-pydantic==2.10.4
+pydantic==2.13.4
 python-dotenv==1.0.1
-requests==2.32.3
+requests==2.34.2
 neo4j==5.27.0
 langgraph==0.2.60
 phonenumbers==8.13.52
 pyod==3.6.1
 numpy==1.26.4
 scikit-learn==1.5.2
+dnspython==2.7.0
+holehe==1.61
+tabpfn-client==0.3.3
+# Local voice anti-spoof (CPU torch + wav2vec2 via transformers)
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.5.1+cpu
+transformers==4.46.3
+soundfile==0.12.1

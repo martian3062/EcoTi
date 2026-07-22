@@ -45,7 +45,7 @@ export default function NumberCheckTool() {
     <div className="space-y-3">
       <div className="flex flex-wrap gap-2">
         {SAMPLES.map((s) => (
-          <button key={s} onClick={() => setNumber(s)} className="rounded-full border border-black/10 bg-white/60 px-3 py-1 font-mono text-xs text-ink2 transition hover:border-crimson hover:text-crimson">{s}</button>
+          <button key={s} onClick={() => setNumber(s)} className="rounded-full border border-white/10 bg-white/10 px-3 py-1 font-mono text-xs text-ink2 transition hover:border-crimson hover:text-crimson">{s}</button>
         ))}
       </div>
       <div className="flex flex-wrap items-center gap-3 text-sm">
@@ -57,10 +57,10 @@ export default function NumberCheckTool() {
       </div>
 
       {res && (
-        <div className={`rounded-2xl border-2 p-4 ${STYLE[res.verdict] ?? "border-black/10"}`}>
+        <div className={`rounded-2xl border-2 p-4 ${STYLE[res.verdict] ?? "border-white/10"}`}>
           <div className="flex items-center justify-between gap-3">
             <span className="text-lg font-extrabold">{LABEL[res.verdict] ?? res.verdict}</span>
-            <span className="badge bg-white/70 font-mono text-ink2">{res.number}</span>
+            <span className="badge bg-white/10 font-mono text-ink2">{res.number}</span>
           </div>
           <div className="mt-2">
             <div className="mb-1 flex justify-between text-xs text-ink3"><span>Risk</span><span>{Math.round(res.risk_score * 100)}%</span></div>
@@ -77,7 +77,7 @@ export default function NumberCheckTool() {
           </ul>
           <div className="mt-2 grid grid-cols-5 gap-1 text-center text-[10px]">
             {SIGNAL_KEYS.map((k) => (
-              <div key={k} className="rounded bg-white/60 p-1">
+              <div key={k} className="rounded bg-white/10 p-1">
                 <div className="text-ink3">{k.slice(0, 4)}</div>
                 <div className="font-mono text-ink">{res.signals?.[k] ?? 0}</div>
               </div>

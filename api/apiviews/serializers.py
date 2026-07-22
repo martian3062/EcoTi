@@ -7,6 +7,8 @@ class AgentRequestSerializer(serializers.Serializer):
 
 class ScamCallRequestSerializer(AgentRequestSerializer):
     audio_ref = serializers.CharField(required=False, default="demo_scam_call.wav")
+    audio_url = serializers.CharField(required=False, allow_blank=True)
+    language = serializers.CharField(required=False, allow_blank=True)
     transcript = serializers.CharField(required=False)
     edge = serializers.BooleanField(required=False, default=False)
 
@@ -33,7 +35,11 @@ class P1CoreDemoRequestSerializer(AgentRequestSerializer):
 
 
 class CounterfeitRequestSerializer(serializers.Serializer):
+    identifier = serializers.CharField(required=False, allow_blank=True)
     image_ref = serializers.CharField(required=False, default="demo_fake_500.jpg")
+    image_url = serializers.CharField(required=False, allow_blank=True)
+    image_b64 = serializers.CharField(required=False, allow_blank=True)
+    denomination = serializers.CharField(required=False, default="500")
 
 
 class GeoHotspotRequestSerializer(serializers.Serializer):

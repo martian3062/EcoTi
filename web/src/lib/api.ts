@@ -36,4 +36,7 @@ export const api = {
   events: () => get("/events"),
   evidence: () => get("/evidence"),
   providersHealth: () => get("/providers/health"),
+  news: () => get("/news"),
+  newsAnchor: () => get("/news/anchor"),
+  tts: (b: unknown) => post("/tts", b),
 };

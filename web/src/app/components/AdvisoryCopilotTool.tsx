@@ -34,7 +34,7 @@ export default function AdvisoryCopilotTool() {
       </p>
       <div className="flex flex-wrap gap-2">
         {SAMPLES.map((s) => (
-          <button key={s} onClick={() => setQ(s)} className="rounded-full border border-black/10 bg-white/60 px-3 py-1 text-xs text-ink2 transition hover:border-crimson hover:text-crimson">
+          <button key={s} onClick={() => setQ(s)} className="rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs text-ink2 transition hover:border-crimson hover:text-crimson">
             {s}
           </button>
         ))}
@@ -43,10 +43,10 @@ export default function AdvisoryCopilotTool() {
       <button onClick={ask} disabled={loading} className="btn-primary">{loading ? "Consulting advisories…" : "Ask"}</button>
 
       {ans && (
-        <div className="rounded-2xl border-2 border-crimson/30 bg-white/50 p-4">
+        <div className="rounded-2xl border-2 border-crimson/30 bg-white/[0.06] p-4">
           <p className="whitespace-pre-line text-[15px] leading-relaxed text-ink">{ans.answer}</p>
           {ans.sources.length > 0 && (
-            <div className="mt-3 border-t border-black/10 pt-3">
+            <div className="mt-3 border-t border-white/10 pt-3">
               <div className="mb-2 text-xs font-semibold text-ink3">Sources</div>
               <ul className="space-y-1 text-xs">
                 {ans.sources.map((s) => (
@@ -62,7 +62,7 @@ export default function AdvisoryCopilotTool() {
         </div>
       )}
 
-      <div className="rounded-xl bg-white/50 p-3">
+      <div className="rounded-xl bg-white/[0.06] p-3">
         <div className="mb-1 text-xs font-semibold text-ink3">Ingested corpus ({sources.reduce((a, s) => a + s.chunks, 0)} chunks)</div>
         <ul className="space-y-0.5 text-xs text-ink2">
           {sources.map((s, i) => (
